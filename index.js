@@ -1,13 +1,7 @@
 const GET = (products) => {
-  if (!products) {
-    fetch('https://fakestoreapi.com/products')
-      .then((response) => response.json())
-      .then((json) => console.log(json))
-  } else {
-    fetch(`https://fakestoreapi.com/${products}`)
-      .then((response) => response.json())
-      .then((json) => console.log(json))
-  }
+  fetch(`https://fakestoreapi.com/${products}`)
+    .then((response) => response.json())
+    .then((json) => console.log(json))
 }
 
 const POST = (title, price, category) => {
