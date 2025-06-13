@@ -1,44 +1,12 @@
-const GET = (products) => {
-  fetch(`https://fakestoreapi.com/${products}`)
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-}
+import express from 'express'
+import cors from 'cors'
+import userRoutes from './routes/user.routes.js'
 
-const POST = (title, price, category) => {
-  fetch('https://fakestoreapi.com/products', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      title: title,
-      price: price,
-      category: category,
-    }),
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-}
+const app = express()
 
-const DELETE = (products) => {
-  fetch(`https://fakestoreapi.com/${products}`, {
-    method: 'DELETE',
-  })
-    .then((response) => response.json())
-    .then((json) => console.log(json))
-  console.log('Deleted')
-}
+app.use(express.json())
 
-const [, , action, ...params] = process.argv
+app.use(cors())
+app.use('/api/user', userRoutes)
 
-if (action === 'GET') {
-  GET(params[0])
-}
-
-if (action === 'POST') {
-  POST(params[1], params[2], params[3])
-}
-
-if (action === 'DELETE') {
-  DELETE(params[0])
-}
+app.listen(3140, () => console.log('server corriendo'))
