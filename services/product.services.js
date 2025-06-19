@@ -7,7 +7,7 @@ const getProducts = () => {
 };
 
 const getByID = (id) => {
-  const findProduct = products.find((product) => product.id === id);
+  const findProduct = db.products.find((product) => product.id === id);
   if (!findProduct) return null;
   return findProduct;
 };
@@ -24,7 +24,7 @@ const createProduct = (product) => {
 };
 
 const deleteProduct = (id) => {
-  const index = db.products.findIndex((product) => product.id === id);
+  const index = getByID(id);
   if (index === -1) return null;
   const deleted = db.products.splice(index, 1)[0];
   return deleted;

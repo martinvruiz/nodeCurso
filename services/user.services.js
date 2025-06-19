@@ -7,7 +7,7 @@ const getUsers = () => {
 };
 
 const getByID = (id) => {
-  const findUser = users.find((user) => user.id === id);
+  const findUser = db.users.find((user) => user.id === id);
   if (!findUser) return null;
   return findUser;
 };
@@ -26,10 +26,10 @@ const updateUser = (id, name) => {
 };
 
 const deleteUser = (id) => {
-  const index = db.users.findIndex((user) => user.id === id);
+  const index = getByID(id);
   if (index === -1) return null;
   const deleted = db.users.splice(index, 1)[0];
   return deleted;
 };
 
-export default { createUser, getUsers, getByID, updateUser, deleteUser };
+export default { createUser, getUsers, updateUser, deleteUser };
