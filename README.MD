@@ -44,7 +44,7 @@ MEASUREMENT_ID= #tus credenciales de firestore
 
 ## Estructura basica
 
-```bash
+```root
 project-root/
 ├── index.js
 ├── package.json
