@@ -1,8 +1,3 @@
-class User {
-  constructor(id, name, email) {
-    this.id = id;
-    this.name = name;
-    this.email = email;
-  }
+export function createUserObject(id, name, email) {
+  return { id, name, email };
 }
-export default User;

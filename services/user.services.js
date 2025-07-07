@@ -1,35 +1,65 @@
-import crypto from "crypto";
-import User from "../models/user.model.js";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
+import { createUserObject } from "../models/user.model.js";
 import db from "../config/db.js";
 
-const getUsers = () => {
-  return db.users;
+const getUsers = async () => {
+  const users = collection(db, "users");
+  const getUsers = await getDocs(users);
+  return getUsers.docs.map((doc) => {
+    const data = doc.data();
+    return createUserObject({ id: doc.id, name: data.name, email: data.email });
+  });
 };
 
-const getByID = (id) => {
-  const findUser = db.users.find((user) => user.id === id);
+const getByID = async (id) => {
+  const findUser = await getDoc(db, "users", id);
   if (!findUser) return null;
-  return findUser;
+  const data = findUser.data();
+  return createUserObject({ id: doc.id, name: data.name, email: data.email });
 };
 
-const createUser = (user) => {
-  const newUser = new User(crypto.randomUUID(), user.name, user.email);
-  db.users.push(newUser);
-  return newUser;
+const createUser = async (user) => {
+  const userCollection = doc(collection(db, "users"));
+  await setDoc(userCollection, { name: user.name, email: user.email });
+  return createUserObject({
+    id: userCollection.id,
+    name: user.name,
+    email: user.email,
+  });
 };
 
-const updateUser = (id, name) => {
-  const findUser = getByID(id);
-  if (!findUser) return null;
-  findUser.name = name;
-  return findUser;
+const updateUser = async (id, name) => {
+  const userRef = doc(db, "users", id);
+  const userDoc = await getDoc(userRef);
+  if (!userDoc.exists()) return null;
+  await setDoc(userRef, { ...userDoc.data(), name }, { merge: true });
+  const updated = await getDoc(userRef);
+  const data = updated.data();
+  return createUserObject({
+    id: updated.id,
+    name: data.name,
+    email: data.email,
+  });
 };
 
-const deleteUser = (id) => {
-  const index = getByID(id);
-  if (index === -1) return null;
-  const deleted = db.users.splice(index, 1)[0];
-  return deleted;
+const deleteUser = async (id) => {
+  const userRef = doc(db, "users", id);
+  const userDoc = await getDoc(userRef);
+  if (!userDoc.exists()) return null;
+  await deleteDoc(userRef);
+  const data = userDoc.data();
+  return createUserObject({
+    id: userDoc.id,
+    name: data.name,
+    email: data.email,
+  });
 };
 
 export default { createUser, getUsers, updateUser, deleteUser };

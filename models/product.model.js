@@ -1,9 +1,3 @@
-class Product {
-  constructor(id, title, price, description) {
-    this.id = id;
-    this.title = title;
-    this.price = price;
-    this.description = description;
-  }
+export function createProductObject({ id, title, price, description }) {
+  return { id, title, price, description };
 }
-export default Product;

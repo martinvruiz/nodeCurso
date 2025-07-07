@@ -1,33 +1,55 @@
-import crypto from "crypto";
-import Product from "../models/product.model.js";
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  getDocs,
+  setDoc,
+} from "firebase/firestore";
 import db from "../config/db.js";
+import { createProductObject } from "../models/product.model.js";
 
-const getProducts = () => {
-  return db.products;
+const getProducts = async () => {
+  const products = collection(db, "products");
+  const getProducts = await getDocs(products);
+  return getProducts.docs.map((doc) => {
+    const data = doc.data();
+    return createProductObject({
+      id: doc.id,
+      title: data.title,
+      price: data.price,
+      description: data.description,
+    });
+  });
 };
 
-const getByID = (id) => {
-  const findProduct = db.products.find((product) => product.id === id);
-  if (!findProduct) return null;
-  return findProduct;
+const createProduct = async (product) => {
+  const productCollection = doc(collection(db, "products"));
+  await setDoc(productCollection, {
+    title: product.title,
+    price: product.price,
+    description: product.description,
+  });
+  return createProductObject({
+    id: productCollection.id,
+    title: product.title,
+    price: product.price,
+    description: product.description,
+  });
 };
 
-const createProduct = (product) => {
-  const newProduct = new Product(
-    crypto.randomUUID(),
-    product.title,
-    product.price,
-    product.description
-  );
-  db.products.push(newProduct);
-  return newProduct;
+const deleteProduct = async (id) => {
+  const productRef = doc(db, "products", id);
+  const productDoc = await getDoc(productRef);
+  if (!productDoc.exists()) return null;
+  await deleteDoc(productRef);
+  const data = productDoc.data();
+  return createProductObject({
+    id: productDoc.id,
+    title: data.title,
+    price: data.price,
+    description: data.description,
+  });
 };
 
-const deleteProduct = (id) => {
-  const index = getByID(id);
-  if (index === -1) return null;
-  const deleted = db.products.splice(index, 1)[0];
-  return deleted;
-};
-
-export default { getByID, getProducts, createProduct, deleteProduct };
+export default { getProducts, createProduct, deleteProduct };

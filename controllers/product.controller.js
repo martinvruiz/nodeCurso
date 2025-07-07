@@ -1,16 +1,16 @@
 import productsServices from "../services/product.services.js";
 
-const getProducts = (req, res) => {
-  const products = productsServices.getProducts();
+const getProducts = async (req, res) => {
+  const products = await productsServices.getProducts();
   res.status(200).json(products);
 };
 
-const createProduct = (req, res) => {
+const createProduct = async (req, res) => {
   const { title, price, description } = req.body;
   if (!title || !price || !description) {
     res.status(401).json({ error: "faltan datos" });
   }
-  const newProduct = productsServices.createProduct({
+  const newProduct = await productsServices.createProduct({
     title,
     price,
     description,
@@ -18,13 +18,13 @@ const createProduct = (req, res) => {
   res.status(201).json(newProduct);
 };
 
-const deleteProduct = (req, res) => {
+const deleteProduct = async (req, res) => {
   const { id } = req.params;
   try {
     if (!id) {
       res.status(401).json({ error: "No ingreso un ID valido" });
     }
-    const deleteProduct = productsServices.deleteProduct(id);
+    const deleteProduct = await productsServices.deleteProduct(id);
     if (!deleteProduct) {
       res.status(401).json("No se encontro al producto");
     }

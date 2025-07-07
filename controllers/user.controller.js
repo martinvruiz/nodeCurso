@@ -1,52 +1,52 @@
-import userServices from '../services/user.services.js'
+import userServices from "../services/user.services.js";
 
-const getUsers = (req, res) => {
-  const users = userServices.getUsers()
-  res.status(200).json(users)
-}
+const getUsers = async (req, res) => {
+  const users = await userServices.getUsers();
+  res.status(200).json(users);
+};
 
-const createUser = (req, res) => {
-  const { name, email } = req.body
+const createUser = async (req, res) => {
+  const { name, email } = req.body;
   if (!name || !email) {
-    res.status(401).json({ error: 'faltan datos' })
+    res.status(401).json({ error: "faltan datos" });
   }
-  const newUser = userServices.createUser({ name, email })
-  res.status(201).json(newUser)
-}
+  const newUser = await userServices.createUser({ name, email });
+  res.status(201).json(newUser);
+};
 
-const updateUser = (req, res) => {
-  const { name } = req.body
-  const { id } = req.params
+const updateUser = async (req, res) => {
+  const { name } = req.body;
+  const { id } = req.params;
   try {
     if (!id) {
-      res.status(401).json({ error: 'No ingreso un ID valido' })
+      res.status(401).json({ error: "No ingreso un ID valido" });
     }
-    const user = userServices.updateUser(id, name)
+    const user = await userServices.updateUser(id, name);
     if (!user) {
-      res.status(401).json('No se encontro al usuario')
+      res.status(401).json("No se encontro al usuario");
     }
 
-    res.status(201).json(user)
-    return user
+    res.status(201).json(user);
+    return user;
   } catch {
-    res.status(501).json('Error interno del servidor')
+    res.status(501).json("Error interno del servidor");
   }
-}
+};
 
-const deleteUser = (req, res) => {
-  const { id } = req.params
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
   try {
     if (!id) {
-      res.status(401).json({ error: 'No ingreso un ID valido' })
+      res.status(401).json({ error: "No ingreso un ID valido" });
     }
-    const deleteUser = userServices.deleteUser(id)
+    const deleteUser = await userServices.deleteUser(id);
     if (!deleteUser) {
-      res.status(401).json('No se encontro al usuario')
+      res.status(401).json("No se encontro al usuario");
     }
-    res.status(201).json('Usuario eliminado con exito')
+    res.status(201).json("Usuario eliminado con exito");
   } catch {
-    res.status(501).json('Error interno del servidor')
+    res.status(501).json("Error interno del servidor");
   }
-}
+};
 
-export default { getUsers, createUser, updateUser, deleteUser }
+export default { getUsers, createUser, updateUser, deleteUser };
