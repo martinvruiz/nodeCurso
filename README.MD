@@ -41,3 +41,13 @@ MESSAGING_SENDER_ID= #tus credenciales de firestore
 APP_ID= #tus credenciales de firestore
 MEASUREMENT_ID= #tus credenciales de firestore
 ```
+
+## Estructura basica
+
+```bash
+project-root/
+├── index.js
+├── package.json
+├── .env
+└── ...
+```
