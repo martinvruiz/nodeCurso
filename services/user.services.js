@@ -19,8 +19,8 @@ const getUsers = async () => {
 };
 
 const getByID = async (id) => {
-  const findUser = await getDoc(db, "users", id);
-  if (!findUser) return null;
+  const findUser = await getDoc(doc(db, "users", id));
+  if (!findUser.exists()) return null;
   const data = findUser.data();
   return createUserObject({ id: doc.id, name: data.name, email: data.email });
 };
@@ -62,4 +62,4 @@ const deleteUser = async (id) => {
   });
 };
 
-export default { createUser, getUsers, updateUser, deleteUser };
+export default { createUser, getUsers, updateUser, deleteUser, getByID };

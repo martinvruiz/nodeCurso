@@ -23,6 +23,18 @@ const getProducts = async () => {
   });
 };
 
+const getByID = async (id) => {
+  const findProduct = await getDoc(doc(db, "products", id));
+  if (!findProduct.exists()) return null;
+  const data = findProduct.data();
+  return createProductObject({
+    id: findProduct.id,
+    title: data.title,
+    price: data.price,
+    description: data.description,
+  });
+};
+
 const createProduct = async (product) => {
   const productCollection = doc(collection(db, "products"));
   await setDoc(productCollection, {
@@ -52,4 +64,4 @@ const deleteProduct = async (id) => {
   });
 };
 
-export default { getProducts, createProduct, deleteProduct };
+export default { getProducts, createProduct, deleteProduct, getByID };
